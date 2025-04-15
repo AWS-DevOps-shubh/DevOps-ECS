@@ -1,6 +1,19 @@
-FROM node:18-alpine3.18
+# Use official Node.js base image
+FROM node:18-alpine
+
+# Set working directory
 WORKDIR /app
-COPY . .
+
+# Copy package files and install deps
+COPY package*.json ./
 RUN npm install
-EXPOSE 3000
-CMD ["npm", "start"]
+
+# Copy source code
+COPY . .
+
+# Expose the port
+EXPOSE 5000
+
+# Start the backend server
+CMD ["node", "server.js"]
+# CMD ["npm", "start"]
