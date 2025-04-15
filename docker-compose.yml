@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: demo
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: demo
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - webnet
+
+  backend:
+    build: ./backend
+    container_name: backend
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: demo
+      DB_PASS: demo
+      DB_NAME: demo
+    ports:
+      - "3000:3000"
+    networks:
+      - webnet
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    networks:
+      - webnet
+
+volumes:
+  mysql_data:
+
+networks:
+  webnet:
